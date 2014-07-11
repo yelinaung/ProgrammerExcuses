@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quote_background"
     android:layout_width="match_parent"
@@ -11,12 +12,10 @@
 
   <TextView
       android:id="@+id/quote_text"
-      android:text="@string/hello_world"
       android:fontFamily="sans-serif-condensed"
       style="@style/myText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_centerHorizontal="true"/>
-
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
