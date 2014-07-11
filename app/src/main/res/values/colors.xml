@@ -13,4 +13,9 @@
     <item>#212121</item>
     <item>#1a237e</item>
   </array>
+
+  <color name="blue">#176ced</color>
+  <color name="red">#d33f2a</color>
+  <color name="yellow">#fdb92c</color>
+  <color name="green">#159957</color>
 </resources>

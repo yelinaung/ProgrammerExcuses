@@ -33,7 +33,7 @@ public class SharePrefUtils {
   }
 
   public String getQuote() {
-    return mSharePreferences.getString(PREF_NAME, null);
+    return mSharePreferences.getString(SAVED_QUOTE, "");
   }
 
   public void saveQuote(String quote) {

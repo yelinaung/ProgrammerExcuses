@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -15,13 +16,16 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import java.util.Random;
 
-public class MyActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener {
+public class MyActivity extends Activity {
 
   @InjectView(R.id.quote_text) TextView mQuoteText;
-  @InjectView(R.id.quote_background) SwipeRefreshLayout mQuoteBackground;
+  @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+  @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
 
   public static final String URL = "http://pe-api.herokuapp.com";
   private int[] myColors;
+  private SharePrefUtils sharePrefUtils;
+  private String randomQuote;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,40 +33,56 @@ public class MyActivity extends Activity implements SwipeRefreshLayout.OnRefresh
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
 
-    SharePrefUtils sharePrefUtils = SharePrefUtils.getInstance(MyActivity.this);
+    mSwipeRefreshLayout.setColorSchemeColors(R.color.blue, R.color.red, R.color.yellow,
+        R.color.green);
+
+    sharePrefUtils = SharePrefUtils.getInstance(MyActivity.this);
 
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
-    String randomQuote = randomQuotes[new Random().nextInt(randomQuotes.length)];
+    randomQuote = randomQuotes[new Random().nextInt(randomQuotes.length)];
     if (sharePrefUtils.isFirstTime()) {
-      sharePrefUtils.saveQuote(randomQuote);
       mQuoteText.setText(randomQuote);
       sharePrefUtils.noMoreFirstTime();
+    } else {
+      mQuoteText.setText(sharePrefUtils.getQuote());
+    }
+
+    // In case, if saved quote is null, just set a random quote
+    if (sharePrefUtils.getQuote() == null) {
+      mQuoteText.setText(randomQuote);
     }
 
     myColors = getResources().getIntArray(R.array.my_colors);
     mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
-    mQuoteText.setText(sharePrefUtils.getQuote());
+
+    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+      @Override public void onRefresh() {
+        new GetQuote().execute();
+      }
+    });
   }
 
-  @Override public void onRefresh() {
-    new GetQuote().execute();
-    mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
-  }
-
-  private class GetQuote extends AsyncTask<String, String, String> {
+  private class GetQuote extends AsyncTask<Void, Void, String> {
     String data = "";
 
-    @Override protected String doInBackground(String... params) {
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+      mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override protected String doInBackground(Void... params) {
+      mSwipeRefreshLayout.setRefreshing(true);
       Ion.with(MyActivity.this)
           .load(URL)
           .asJsonObject()
           .setCallback(new FutureCallback<JsonObject>() {
             @Override public void onCompleted(Exception e, JsonObject result) {
               data = result.get("message").getAsString();
+              sharePrefUtils.saveQuote(data);
               Log.i("_res", data);
               runOnUiThread(new Runnable() {
                 @Override public void run() {
-                  mQuoteText.setText(data + ".");
+                  mQuoteText.setText(data);
                 }
               });
             }
@@ -72,7 +92,8 @@ public class MyActivity extends Activity implements SwipeRefreshLayout.OnRefresh
 
     @Override protected void onPostExecute(String s) {
       super.onPostExecute(s);
-      Log.i("_res", s);
+      mSwipeRefreshLayout.setRefreshing(false);
+      mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
     }
   }
 

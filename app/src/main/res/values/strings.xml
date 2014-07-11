@@ -7,7 +7,7 @@
 
   <string-array name="excuses">
     <item>The download must have been corrupted.</item>
-    <item>I haven't had the chance to run that code yet.</item>
+    <item>I haven\'t had the chance to run that code yet.</item>
     <item>It works for me.</item>
     <item>Everything looks fine my end.</item>
     <item>Your browser must be caching the old content.</item>
