@@ -1,20 +1,20 @@
 package com.yelinaung.programmerexcuses;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import java.util.Random;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MyActivity extends Activity {
 
@@ -26,9 +26,9 @@ public class MyActivity extends Activity {
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
   private String randomQuote;
+  private AsyncHttpClient client = new AsyncHttpClient();
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
@@ -57,44 +57,32 @@ public class MyActivity extends Activity {
 
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
-        new GetQuote().execute();
+        getQuote();
       }
     });
   }
 
-  private class GetQuote extends AsyncTask<Void, Void, String> {
-    String data = "";
+  private void getQuote() {
+    client.get(URL, new JsonHttpResponseHandler() {
 
-    @Override protected void onPreExecute() {
-      super.onPreExecute();
-      mSwipeRefreshLayout.setRefreshing(true);
-    }
+      @Override
+      public void onStart() {
+        mSwipeRefreshLayout.setRefreshing(true);
+      }
 
-    @Override protected String doInBackground(Void... params) {
-      mSwipeRefreshLayout.setRefreshing(true);
-      Ion.with(MyActivity.this)
-          .load(URL)
-          .asJsonObject()
-          .setCallback(new FutureCallback<JsonObject>() {
-            @Override public void onCompleted(Exception e, JsonObject result) {
-              data = result.get("message").getAsString();
-              sharePrefUtils.saveQuote(data);
-              Log.i("_res", data);
-              runOnUiThread(new Runnable() {
-                @Override public void run() {
-                  mQuoteText.setText(data);
-                }
-              });
-            }
-          });
-      return data;
-    }
-
-    @Override protected void onPostExecute(String s) {
-      super.onPostExecute(s);
-      mSwipeRefreshLayout.setRefreshing(false);
-      mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
-    }
+      @Override public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        super.onSuccess(statusCode, headers, response);
+        mSwipeRefreshLayout.setRefreshing(false);
+        try {
+          String msg = response.get("message").toString();
+          sharePrefUtils.saveQuote(msg);
+          mQuoteText.setText(msg);
+          mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
   @Override
