@@ -17,10 +17,14 @@
 package com.yelinaung.programmerexcuses;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.loopj.android.http.AsyncHttpClient;
@@ -41,11 +45,14 @@ public class MyActivity extends Activity {
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
   private AsyncHttpClient client = new AsyncHttpClient();
+  private ConnManager connManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
+
+    connManager = new ConnManager(MyActivity.this);
 
     mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.red, R.color.yellow,
         R.color.green);
@@ -74,13 +81,17 @@ public class MyActivity extends Activity {
 
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
-        getQuote();
+        if (connManager.isConnected()) {
+          getQuoteFromApi();
+        } else {
+          Toast.makeText(MyActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
       }
     });
   }
 
   // Doing http stuff here
-  private void getQuote() {
+  private void getQuoteFromApi() {
     client.get(URL, new JsonHttpResponseHandler() {
 
       @Override
@@ -103,5 +114,30 @@ public class MyActivity extends Activity {
         }
       }
     });
+  }
+
+  public class ConnManager {
+    private Context mContext;
+
+    public ConnManager(Context context) {
+      this.mContext = context;
+    }
+
+    public boolean isConnected() {
+      ConnectivityManager connectivity =
+          (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+      if (connectivity != null) {
+        NetworkInfo[] info = connectivity.getAllNetworkInfo();
+        if (info != null) {
+          for (NetworkInfo anInfo : info) {
+            if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
   }
 }
