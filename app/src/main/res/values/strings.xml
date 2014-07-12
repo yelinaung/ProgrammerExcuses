@@ -11,4 +11,7 @@
     <item>Your browser must be caching the old content.</item>
   </string-array>
 
+  <string name="info">Info</string>
+  <string name="pe">PE</string>
+
 </resources>

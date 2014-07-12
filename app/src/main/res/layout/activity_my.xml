@@ -30,12 +30,17 @@
         android:id="@+id/quote_text"
         android:fontFamily="sans-serif-condensed"
         style="@style/myText"
-        android:padding="@dimen/activity_vertical_margin"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
-
+    <!--
+    <Button
+      android:id="@+id/pe_btn"
+      style="@style/pe_btn_style"
+      android:text="@string/pe"
+      android:contentDescription="@string/info"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"/>
+    -->
   </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -22,8 +22,9 @@
   </style>
 
   <style name="myText">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:padding">@dimen/activity_vertical_margin</item>
 
     <item name="android:textColor">#fff</item>
     <item name="android:textSize">28sp</item>
@@ -31,6 +32,16 @@
 
     <item name="android:clickable">true</item>
     <item name="android:focusable">true</item>
+
+    <item name="android:gravity">center</item>
+  </style>
+
+  <style name="pe_btn_style">
+    <item name="android:layout_width">48dp</item>
+    <item name="android:layout_height">48dp</item>
+    <item name="android:layout_margin">5dp</item>
+    <item name="gravity">center</item>
+    <item name="android:background">@drawable/fa_default_background</item>
   </style>
 
 </resources>
