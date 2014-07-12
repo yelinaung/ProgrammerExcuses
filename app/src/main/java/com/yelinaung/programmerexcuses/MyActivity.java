@@ -37,6 +37,8 @@ public class MyActivity extends Activity {
 
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
     String randomQuote = randomQuotes[new Random().nextInt(randomQuotes.length)];
+
+    // if first time, then just get the random quote
     if (sharePrefUtils.isFirstTime()) {
       mQuoteText.setText(randomQuote);
       sharePrefUtils.noMoreFirstTime();
@@ -64,15 +66,17 @@ public class MyActivity extends Activity {
 
       @Override
       public void onStart() {
+        // Show Refreshing Progress at first
         mSwipeRefreshLayout.setRefreshing(true);
       }
 
       @Override public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         super.onSuccess(statusCode, headers, response);
+        // Don't show Refreshing Progress if succeed
         mSwipeRefreshLayout.setRefreshing(false);
         try {
           String msg = response.get("message").toString();
-          sharePrefUtils.saveQuote(msg);
+          sharePrefUtils.saveQuote(msg); // save to pref
           mQuoteText.setText(msg);
           mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
         } catch (JSONException e) {
