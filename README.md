@@ -3,6 +3,8 @@ Programmer Execuses
 
 Simple client which uses [pe-api](https://github.com/yelinaung/pe-api). 
 
+![Screenshot](https://raw.githubusercontent.com/yelinaung/ProgrammerExcuses/master/screenshot.png)
+
 It's using 
 - [SwipeRefreshLayout](https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html) for swipe-down-to-refresh layout.
 - [ButterKinife](https://jakewharton.github.io/butterknife) for view injections.
