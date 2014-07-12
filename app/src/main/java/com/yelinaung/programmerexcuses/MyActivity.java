@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 public class MyActivity extends Activity {
 
+  // View Injections
   @InjectView(R.id.quote_text) TextView mQuoteText;
   @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
@@ -78,6 +79,7 @@ public class MyActivity extends Activity {
     });
   }
 
+  // Doing http stuff here
   private void getQuote() {
     client.get(URL, new JsonHttpResponseHandler() {
 

@@ -16,6 +16,7 @@
 
 package com.yelinaung.programmerexcuses;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -28,11 +29,14 @@ public class SharePrefUtils {
   private static final String FIRST_TIME = "first_time";
   private static final String SAVED_QUOTE = "saved_quote";
 
-  public SharePrefUtils(Context context) {
+  @SuppressLint("CommitPrefEdits") public SharePrefUtils(Context context) {
     mSharePreferences = context.getSharedPreferences(PREF_NAME, 0);
     mEditor = mSharePreferences.edit();
   }
 
+  /**
+   * @param context Accepts context as a param
+   */
   public static SharePrefUtils getInstance(Context context) {
     if (pref == null) {
       pref = new SharePrefUtils(context);
@@ -40,10 +44,16 @@ public class SharePrefUtils {
     return pref;
   }
 
+  /**
+   * Get true if the app is launched first time
+   */
   public boolean isFirstTime() {
     return mSharePreferences.getBoolean(FIRST_TIME, true);
   }
 
+  /**
+   * Once app is launched for the first time, it's no longer first time
+   */
   public void noMoreFirstTime() {
     mEditor.putBoolean(FIRST_TIME, false).commit();
   }
@@ -52,6 +62,9 @@ public class SharePrefUtils {
     return mSharePreferences.getString(SAVED_QUOTE, null);
   }
 
+  /**
+   * @param quote The quote to save in the preference
+   */
   public void saveQuote(String quote) {
     mEditor.putString(SAVED_QUOTE, quote).commit();
   }
