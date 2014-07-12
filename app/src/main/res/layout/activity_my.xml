@@ -29,7 +29,8 @@
     <TextView
         android:id="@+id/quote_text"
         android:fontFamily="sans-serif-condensed"
-        style="@style/myText"
+        style="@style/mQuoteTextStyle"
+        android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
     <!--

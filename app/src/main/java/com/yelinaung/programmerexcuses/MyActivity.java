@@ -46,8 +46,9 @@ public class MyActivity extends Activity {
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
 
-    mSwipeRefreshLayout.setColorSchemeColors(R.color.blue, R.color.red, R.color.yellow,
+    mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.red, R.color.yellow,
         R.color.green);
+    mSwipeRefreshLayout.setEnabled(true);
 
     sharePrefUtils = SharePrefUtils.getInstance(MyActivity.this);
 
