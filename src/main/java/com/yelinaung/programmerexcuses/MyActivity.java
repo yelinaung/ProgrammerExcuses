@@ -41,7 +41,7 @@ public class MyActivity extends Activity {
   @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
 
-  public static final String URL = "http://pe-api.herokuapp.com";
+  private static final String URL = "http://pe-api.herokuapp.com";
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
   private AsyncHttpClient client = new AsyncHttpClient();
@@ -63,7 +63,7 @@ public class MyActivity extends Activity {
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
     String randomQuote = randomQuotes[new Random().nextInt(randomQuotes.length)];
 
-    // if first time, then just get the random quote
+    // if the app is launched for the first time, then just get the random quote
     if (sharePrefUtils.isFirstTime()) {
       mQuoteText.setText(randomQuote);
       sharePrefUtils.noMoreFirstTime();
