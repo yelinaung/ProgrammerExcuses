@@ -3,6 +3,13 @@ Programmer Execuses
 
 Simple client which uses [pe-api](https://github.com/yelinaung/pe-api). 
 
+It's now available on Play Store
+
+<a href="https://play.google.com/store/apps/details?id=com.yelinaung.programmerexcuses">
+  <img alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
+</a>
+
+
 ![Screenshot](https://raw.githubusercontent.com/yelinaung/ProgrammerExcuses/master/screenshot.png)
 
 It's using 
