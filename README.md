@@ -17,6 +17,9 @@ It's using
 - [ButterKinife](https://jakewharton.github.io/butterknife) for view injections.
 - [android-async-http](http://loopj.com/android-async-http) for http client.
 
+TODO
+----
+- "Share"
 
 Contributing
 ------------
