@@ -12,7 +12,8 @@
   </string-array>
 
   <string name="info">Info</string>
-  <string name="pe">PE</string>
+  <string name="pe">Share</string>
+  <string name="share_to">Share to ..</string>
   <string name="no_connection">Could not refresh data. Please check your connection.</string>
 
 </resources>

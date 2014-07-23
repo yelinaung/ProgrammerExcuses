@@ -18,6 +18,7 @@ package com.yelinaung.programmerexcuses;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import java.util.Random;
@@ -139,5 +141,14 @@ public class MyActivity extends Activity {
       }
       return false;
     }
+  }
+
+  @OnClick(R.id.share_btn)
+  public void share() {
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+    sendIntent.setType("text/plain");
+    startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
   }
 }

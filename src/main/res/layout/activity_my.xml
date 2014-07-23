@@ -14,34 +14,40 @@
   ~ limitations under the License.
   -->
 
-<android.support.v4.widget.SwipeRefreshLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MyActivity">
-
-  <RelativeLayout
-      android:id="@+id/quote_background"
+    android:layout_height="match_parent">
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_refresh_layout"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/quote_text"
-        android:fontFamily="sans-serif-condensed"
-        style="@style/mQuoteTextStyle"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
-    <!--
-    <Button
-      android:id="@+id/pe_btn"
+      android:layout_height="match_parent"
+      tools:context=".MyActivity">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/quote_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+      <TextView
+          android:id="@+id/quote_text"
+          android:fontFamily="sans-serif-condensed"
+          style="@style/mQuoteTextStyle"
+          android:gravity="center"
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+  </android.support.v4.widget.SwipeRefreshLayout>
+  <ImageButton
+      android:id="@+id/share_btn"
       style="@style/pe_btn_style"
-      android:text="@string/pe"
+      android:src="@drawable/ic_action_share"
+      android:paddingRight="5dp"
       android:contentDescription="@string/info"
       android:layout_alignParentBottom="true"
       android:layout_alignParentRight="true"
       android:layout_alignParentEnd="true"/>
-    -->
-  </RelativeLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>
