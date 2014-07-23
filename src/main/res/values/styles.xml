@@ -36,8 +36,8 @@
   </style>
 
   <style name="pe_btn_style">
-    <item name="android:layout_width">48dp</item>
-    <item name="android:layout_height">48dp</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_margin">5dp</item>
     <item name="android:background">@drawable/fa_default_background</item>
   </style>
