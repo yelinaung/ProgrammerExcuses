@@ -16,4 +16,8 @@
   <string name="share_to">Share to ..</string>
   <string name="no_connection">Could not refresh data. Please check your connection.</string>
 
+  <string name="share_text">Today excuse : \"%s\" via ProgrammerExcuse App
+    https://play.google.com/store/apps/details?id=com.yelinaung.programmerexcuses
+  </string>
+
 </resources>
