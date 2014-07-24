@@ -24,7 +24,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,7 +38,7 @@ import org.json.JSONObject;
 public class MyActivity extends Activity {
 
   // View Injections
-  @InjectView(R.id.quote_text) TextView mQuoteText;
+  @InjectView(R.id.quote_text) SecretTextView mQuoteText;
   @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
 
@@ -54,6 +53,8 @@ public class MyActivity extends Activity {
     ButterKnife.inject(this);
 
     connManager = new ConnManager(MyActivity.this);
+
+    mQuoteText.show();
 
     mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.red, R.color.yellow,
         R.color.green);
@@ -99,12 +100,14 @@ public class MyActivity extends Activity {
       public void onStart() {
         // Show Refreshing Progress at first
         mSwipeRefreshLayout.setRefreshing(true);
+        mQuoteText.hide();
       }
 
       @Override public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         super.onSuccess(statusCode, headers, response);
         // Don't show Refreshing Progress if succeed
         mSwipeRefreshLayout.setRefreshing(false);
+        mQuoteText.show();
         try {
           String msg = response.get("message").toString();
           sharePrefUtils.saveQuote(msg); // save to pref
