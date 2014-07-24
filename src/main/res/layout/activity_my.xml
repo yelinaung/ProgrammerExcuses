@@ -45,7 +45,7 @@
       android:id="@+id/share_btn"
       style="@style/pe_btn_style"
       android:src="@drawable/ic_action_share"
-      android:paddingRight="5dp"
+      android:paddingRight="@dimen/medium_padding"
       android:contentDescription="@string/info"
       android:layout_alignParentBottom="true"
       android:layout_alignParentRight="true"

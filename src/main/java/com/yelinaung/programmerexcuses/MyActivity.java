@@ -43,10 +43,9 @@ public class MyActivity extends Activity {
   @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
 
-  private static final String URL = "http://pe-api.herokuapp.com";
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
-  private AsyncHttpClient client = new AsyncHttpClient();
+  private final AsyncHttpClient client = new AsyncHttpClient();
   private ConnManager connManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public class MyActivity extends Activity {
 
   // Doing http stuff here
   private void getQuoteFromApi() {
-    client.get(URL, new JsonHttpResponseHandler() {
+    client.get(getString(R.string.api), new JsonHttpResponseHandler() {
 
       @Override
       public void onStart() {
@@ -119,7 +118,7 @@ public class MyActivity extends Activity {
   }
 
   public class ConnManager {
-    private Context mContext;
+    private final Context mContext;
 
     public ConnManager(Context context) {
       this.mContext = context;
@@ -143,7 +142,7 @@ public class MyActivity extends Activity {
     }
   }
 
-  @OnClick(R.id.share_btn)
+  @SuppressWarnings("UnusedDeclaration") @OnClick(R.id.share_btn)
   public void share() {
     Intent sendIntent = new Intent();
     sendIntent.setAction(Intent.ACTION_SEND);

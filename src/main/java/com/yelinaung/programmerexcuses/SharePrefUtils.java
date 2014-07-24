@@ -22,14 +22,14 @@ import android.content.SharedPreferences;
 
 public class SharePrefUtils {
   private static SharePrefUtils pref;
-  private SharedPreferences mSharePreferences;
-  private SharedPreferences.Editor mEditor;
+  private final SharedPreferences mSharePreferences;
+  private final SharedPreferences.Editor mEditor;
 
   private static final String PREF_NAME = "mPref";
   private static final String FIRST_TIME = "first_time";
   private static final String SAVED_QUOTE = "saved_quote";
 
-  @SuppressLint("CommitPrefEdits") public SharePrefUtils(Context context) {
+  @SuppressLint("CommitPrefEdits") private SharePrefUtils(Context context) {
     mSharePreferences = context.getSharedPreferences(PREF_NAME, 0);
     mEditor = mSharePreferences.edit();
   }
