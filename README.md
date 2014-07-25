@@ -19,7 +19,8 @@ It's using
 
 TODO
 ----
-- "Share"
+- ~~"Share"~~
+- Daily Notifications
 
 Contributing
 ------------
