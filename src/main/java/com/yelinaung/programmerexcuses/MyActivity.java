@@ -86,6 +86,8 @@ public class MyActivity extends Activity {
         if (connManager.isConnected()) {
           getQuoteFromApi();
         } else {
+          client.cancelAllRequests(true);
+          mSwipeRefreshLayout.setRefreshing(false);
           Toast.makeText(MyActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
       }
