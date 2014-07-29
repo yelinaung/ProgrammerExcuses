@@ -20,5 +20,7 @@
   </string>
 
   <string name="api">http://pe-api.herokuapp.com</string>
+  
+  <string name="timeout">Connection timeout :(</string>
 
 </resources>

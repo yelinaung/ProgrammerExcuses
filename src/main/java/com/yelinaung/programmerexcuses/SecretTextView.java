@@ -19,7 +19,6 @@ import android.widget.TextView;
  */
 public class SecretTextView extends TextView {
   private String mTextString;
-  private SpannableString mSpannableString;
 
   private double[] mAlphas;
   private boolean mIsVisible;
@@ -72,7 +71,7 @@ public class SecretTextView extends TextView {
 
   public void setIsVisible(boolean isVisible) {
     mIsVisible = isVisible;
-    resetSpannableString(isVisible == true ? 2.0f : 0.0f);
+    resetSpannableString(isVisible ? 2.0f : 0.0f);
   }
 
   public boolean getIsVisible() {
@@ -82,7 +81,7 @@ public class SecretTextView extends TextView {
   private void resetSpannableString(double percent) {
     mIsTextResetting = true;
 
-    mSpannableString = new SpannableString(this.mTextString);
+    SpannableString mSpannableString = new SpannableString(this.mTextString);
     int color = getCurrentTextColor();
     for (int i = 0; i < mSpannableString.length(); i++) {
       mSpannableString.setSpan(new ForegroundColorSpan(

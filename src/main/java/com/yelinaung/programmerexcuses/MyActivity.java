@@ -23,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -32,6 +33,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import java.util.Random;
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,7 +104,6 @@ public class MyActivity extends Activity {
       public void onStart() {
         // Show Refreshing Progress at first
         mSwipeRefreshLayout.setRefreshing(true);
-        mQuoteText.hide();
       }
 
       @Override public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -118,6 +119,15 @@ public class MyActivity extends Activity {
         } catch (JSONException e) {
           e.printStackTrace();
         }
+      }
+
+      @Override public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+          JSONArray errorResponse) {
+        super.onFailure(statusCode, headers, throwable, errorResponse);
+        Log.i("code", "code " + statusCode);
+        mSwipeRefreshLayout.setRefreshing(false);
+        mQuoteText.setText(mQuoteText.getText());
+        Toast.makeText(MyActivity.this, R.string.timeout, Toast.LENGTH_SHORT).show();
       }
     });
   }
