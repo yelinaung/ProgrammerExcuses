@@ -22,6 +22,11 @@ TODO
 - ~~"Share"~~
 - Daily Notifications
 
+Required Permissions
+--------------------
+`android.permission.INTERNET` - Need to access to API to fetch the message
+`android.permission.ACCESS_NETWORK_STATE` - Need to access whether the host device is offline/not connected to wifi
+
 Contributing
 ------------
 
