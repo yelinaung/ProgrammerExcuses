@@ -31,6 +31,10 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.otto.Subscribe;
+import com.yelinaung.programmerexcuses.event.BusProvider;
+import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
+import com.yelinaung.programmerexcuses.event.QuoteDownloadedEvent;
 import java.util.Random;
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -86,6 +90,7 @@ public class MyActivity extends Activity {
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
         if (connManager.isConnected()) {
+          BusProvider.getInstance().post(new OnSwipeDownEvent());
           getQuoteFromApi();
         } else {
           client.cancelAllRequests(true);
@@ -94,6 +99,16 @@ public class MyActivity extends Activity {
         }
       }
     });
+  }
+
+  @Subscribe public void setQuoteToUiEvent(QuoteDownloadedEvent event) {
+    if (mQuoteText != null) {
+      mQuoteText.setText(event.message);
+    }
+  }
+
+  @Subscribe private void onDownloadQuote(OnSwipeDownEvent event) {
+    getQuoteFromApi();
   }
 
   // Doing http stuff here
@@ -113,6 +128,9 @@ public class MyActivity extends Activity {
         mQuoteText.show();
         try {
           String msg = response.get("message").toString();
+
+          BusProvider.getInstance().post(new QuoteDownloadedEvent(msg));
+
           sharePrefUtils.saveQuote(msg); // save to pref
           mQuoteText.setText(msg);
           mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
@@ -165,5 +183,13 @@ public class MyActivity extends Activity {
         String.format(getString(R.string.share_text), mQuoteText.getText()));
     sendIntent.setType("text/plain");
     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
   }
 }
