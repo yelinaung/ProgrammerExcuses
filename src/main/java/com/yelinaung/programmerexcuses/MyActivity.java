@@ -114,7 +114,7 @@ public class MyActivity extends Activity {
     mQuoteText.setText(mQuoteText.getText());
   }
 
-  @Subscribe private void onDownloadQuote(OnSwipeDownEvent event) {
+  @Subscribe public void onDownloadQuote(OnSwipeDownEvent event) {
     getQuoteFromApi();
   }
 
