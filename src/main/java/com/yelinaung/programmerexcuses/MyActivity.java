@@ -34,6 +34,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.otto.Subscribe;
 import com.yelinaung.programmerexcuses.event.BusProvider;
 import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
+import com.yelinaung.programmerexcuses.event.QuoteDownloadFailEvent;
 import com.yelinaung.programmerexcuses.event.QuoteDownloadedEvent;
 import java.util.Random;
 import org.apache.http.Header;
@@ -107,6 +108,12 @@ public class MyActivity extends Activity {
     }
   }
 
+  @Subscribe public void QuoteDownloadFail(QuoteDownloadFailEvent event) {
+    Toast.makeText(this, event.failMsg, Toast.LENGTH_SHORT).show();
+    mSwipeRefreshLayout.setRefreshing(false);
+    mQuoteText.setText(mQuoteText.getText());
+  }
+
   @Subscribe private void onDownloadQuote(OnSwipeDownEvent event) {
     getQuoteFromApi();
   }
@@ -143,9 +150,8 @@ public class MyActivity extends Activity {
           JSONArray errorResponse) {
         super.onFailure(statusCode, headers, throwable, errorResponse);
         Log.i("code", "code " + statusCode);
-        mSwipeRefreshLayout.setRefreshing(false);
-        mQuoteText.setText(mQuoteText.getText());
-        Toast.makeText(MyActivity.this, R.string.timeout, Toast.LENGTH_SHORT).show();
+
+        BusProvider.getInstance().post(new QuoteDownloadFailEvent(getString(R.string.timeout)));
       }
     });
   }
