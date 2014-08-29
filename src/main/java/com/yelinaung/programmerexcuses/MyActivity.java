@@ -36,6 +36,7 @@ import com.yelinaung.programmerexcuses.event.BusProvider;
 import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
 import com.yelinaung.programmerexcuses.event.QuoteDownloadFailEvent;
 import com.yelinaung.programmerexcuses.event.QuoteDownloadedEvent;
+import com.yelinaung.programmerexcuses.widget.SecretTextView;
 import java.util.Random;
 import org.apache.http.Header;
 import org.json.JSONArray;

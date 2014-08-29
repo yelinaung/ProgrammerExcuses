@@ -3,7 +3,7 @@
  * Created by matt on 5/27/14.
  */
 
-package com.yelinaung.programmerexcuses;
+package com.yelinaung.programmerexcuses.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
