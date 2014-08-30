@@ -93,7 +93,6 @@ public class MyActivity extends Activity {
       @Override public void onRefresh() {
         if (connManager.isConnected()) {
           BusProvider.getInstance().post(new OnSwipeDownEvent());
-          getQuoteFromApi();
         } else {
           client.cancelAllRequests(true);
           mSwipeRefreshLayout.setRefreshing(false);
@@ -121,6 +120,8 @@ public class MyActivity extends Activity {
 
   // Doing http stuff here
   private void getQuoteFromApi() {
+
+
     client.get(getString(R.string.api), new JsonHttpResponseHandler() {
 
       @Override
