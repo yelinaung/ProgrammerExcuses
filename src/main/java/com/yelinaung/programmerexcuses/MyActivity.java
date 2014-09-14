@@ -23,25 +23,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.otto.Subscribe;
 import com.yelinaung.programmerexcuses.event.BusProvider;
 import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
 import com.yelinaung.programmerexcuses.event.QuoteDownloadFailEvent;
 import com.yelinaung.programmerexcuses.event.QuoteDownloadedEvent;
+import com.yelinaung.programmerexcuses.model.Excuse;
 import com.yelinaung.programmerexcuses.widget.SecretTextView;
 import java.util.Random;
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MyActivity extends Activity {
 
@@ -54,11 +53,16 @@ public class MyActivity extends Activity {
   private SharePrefUtils sharePrefUtils;
   private final AsyncHttpClient client = new AsyncHttpClient();
   private ConnManager connManager;
+  private RestAdapter restAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
+
+    restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
+        .setLogLevel(RestAdapter.LogLevel.FULL)
+        .build();
 
     connManager = new ConnManager(MyActivity.this);
 
@@ -120,40 +124,23 @@ public class MyActivity extends Activity {
 
   // Doing http stuff here
   private void getQuoteFromApi() {
+    mSwipeRefreshLayout.setRefreshing(true);
 
-
-    client.get(getString(R.string.api), new JsonHttpResponseHandler() {
-
-      @Override
-      public void onStart() {
-        // Show Refreshing Progress at first
-        mSwipeRefreshLayout.setRefreshing(true);
-      }
-
-      @Override public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-        super.onSuccess(statusCode, headers, response);
-        // Don't show Refreshing Progress if succeed
+    ExcuseService service = restAdapter.create(ExcuseService.class);
+    service.getExcuse(new Callback<Excuse>() {
+      @Override public void success(Excuse excuse, Response response) {
         mSwipeRefreshLayout.setRefreshing(false);
         mQuoteText.show();
-        try {
-          String msg = response.get("message").toString();
-
-          BusProvider.getInstance().post(new QuoteDownloadedEvent(msg));
-
-          sharePrefUtils.saveQuote(msg); // save to pref
-          mQuoteText.setText(msg);
-          mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
+        BusProvider.getInstance().post(new QuoteDownloadedEvent(excuse.message));
+        sharePrefUtils.saveQuote(excuse.message); // save to pref
+        mQuoteText.setText(excuse.message);
+        mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
       }
 
-      @Override public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-          JSONArray errorResponse) {
-        super.onFailure(statusCode, headers, throwable, errorResponse);
-        Log.i("code", "code " + statusCode);
-
-        BusProvider.getInstance().post(new QuoteDownloadFailEvent(getString(R.string.timeout)));
+      @Override public void failure(RetrofitError error) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        // TODO proper error handling
+        //BusProvider.getInstance().post(new QuoteDownloadFailEvent(getString(R.string.timeout)));
       }
     });
   }
