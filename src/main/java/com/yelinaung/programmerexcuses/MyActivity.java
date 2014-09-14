@@ -28,7 +28,6 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.loopj.android.http.AsyncHttpClient;
 import com.squareup.otto.Subscribe;
 import com.yelinaung.programmerexcuses.event.BusProvider;
 import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
@@ -51,7 +50,6 @@ public class MyActivity extends Activity {
 
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
-  private final AsyncHttpClient client = new AsyncHttpClient();
   private ConnManager connManager;
   private RestAdapter restAdapter;
 
@@ -98,7 +96,6 @@ public class MyActivity extends Activity {
         if (connManager.isConnected()) {
           BusProvider.getInstance().post(new OnSwipeDownEvent());
         } else {
-          client.cancelAllRequests(true);
           mSwipeRefreshLayout.setRefreshing(false);
           Toast.makeText(MyActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
