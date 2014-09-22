@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">Programmer Excuses</string>
+    <string name="app_name">Programmer Excuses</string>
 
-  <string-array name="excuses">
-    <item>The download must have been corrupted.</item>
-    <item>I haven\'t had the chance to run that code yet.</item>
-    <item>It works for me.</item>
-    <item>Everything looks fine my end.</item>
-    <item>Your browser must be caching the old content.</item>
-    <item>Oh, you said you DIDN\'T want that to happen?</item>
-    <item>The program has never collected that information.</item>
-  </string-array>
+    <string-array name="excuses">
+        <item>The download must have been corrupted.</item>
+        <item>I haven\'t had the chance to run that code yet.</item>
+        <item>It works for me.</item>
+        <item>Everything looks fine my end.</item>
+        <item>Your browser must be caching the old content.</item>
+        <item>Oh, you said you DIDN\'T want that to happen?</item>
+        <item>The program has never collected that information.</item>
+    </string-array>
 
-  <string name="info">Info</string>
-  <string name="share_to">Share to ..</string>
-  <string name="no_connection">Could not refresh data. Please check your connection.</string>
-
-  <string name="share_text">Today excuse : \"%s\" via ProgrammerExcuse App
-    https://play.google.com/store/apps/details?id=com.yelinaung.programmerexcuses
-  </string>
-
-  <string name="api">http://pe-api.herokuapp.com</string>
-  
-  <string name="timeout">Connection timeout :(</string>
+    <string name="info">Info</string>
+    <string name="share_to">Share to ..</string>
+    <string name="no_connection">Could not refresh data. Please check your connection.</string>
+    <string name="share_text">Today excuse : \"%s\" via ProgrammerExcuse App
+    https://play.google.com/store/apps/details?id=com.yelinaung.programmerexcuses</string>
+    <string name="api">http://pe-api.herokuapp.com</string>
+    <string name="timeout">Connection timeout :(</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

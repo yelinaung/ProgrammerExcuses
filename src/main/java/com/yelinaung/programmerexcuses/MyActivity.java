@@ -23,6 +23,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -52,6 +55,7 @@ public class MyActivity extends Activity {
   private SharePrefUtils sharePrefUtils;
   private ConnManager connManager;
   private RestAdapter restAdapter;
+  private int count;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,6 +103,14 @@ public class MyActivity extends Activity {
           mSwipeRefreshLayout.setRefreshing(false);
           Toast.makeText(MyActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
+      }
+    });
+
+    mQuoteBackground.setOnTouchListener(new View.OnTouchListener() {
+      @Override public boolean onTouch(View v, MotionEvent event) {
+        count += event.getPointerCount();
+        Log.i("touch", "count -> " + count);
+        return false;
       }
     });
   }
