@@ -128,9 +128,9 @@ public class HomeActivity extends Activity {
       @Override public void success(Excuse excuse, Response response) {
         mSwipeRefreshLayout.setRefreshing(false);
         mQuoteText.show();
-        BusProvider.getInstance().post(new QuoteDownloadedEvent(excuse.message));
-        sharePrefUtils.saveQuote(excuse.message); // save to pref
-        mQuoteText.setText(excuse.message);
+        BusProvider.getInstance().post(new QuoteDownloadedEvent(excuse.getMessage()));
+        sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
+        mQuoteText.setText(excuse.getMessage());
         mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
       }
 
