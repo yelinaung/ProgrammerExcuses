@@ -16,13 +16,14 @@
 
 package com.yelinaung.programmerexcuses;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -41,7 +42,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends ActionBarActivity {
 
   // View Injections
   @InjectView(R.id.quote_text) SecretTextView mQuoteText;
@@ -58,8 +59,8 @@ public class HomeActivity extends Activity {
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
 
-    restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
-        .setLogLevel(RestAdapter.LogLevel.FULL)
+    restAdapter = new RestAdapter.Builder()
+        .setEndpoint(getString(R.string.api))
         .build();
 
     connManager = new ConnManager(HomeActivity.this);
@@ -89,7 +90,13 @@ public class HomeActivity extends Activity {
     }
 
     myColors = getResources().getIntArray(R.array.my_colors);
-    mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
+
+    int color = myColors[new Random().nextInt(myColors.length)];
+    mQuoteBackground.setBackgroundColor(color);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setStatusBarColor(color);
+    }
 
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
@@ -131,7 +138,11 @@ public class HomeActivity extends Activity {
         BusProvider.getInstance().post(new QuoteDownloadedEvent(excuse.getMessage()));
         sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
         mQuoteText.setText(excuse.getMessage());
-        mQuoteBackground.setBackgroundColor(myColors[new Random().nextInt(myColors.length)]);
+        int color = myColors[new Random().nextInt(myColors.length)];
+        mQuoteBackground.setBackgroundColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          getWindow().setStatusBarColor(color);
+        }
       }
 
       @Override public void failure(RetrofitError error) {
