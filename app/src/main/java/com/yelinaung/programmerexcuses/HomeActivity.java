@@ -41,7 +41,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MyActivity extends Activity {
+public class HomeActivity extends Activity {
 
   // View Injections
   @InjectView(R.id.quote_text) SecretTextView mQuoteText;
@@ -62,7 +62,7 @@ public class MyActivity extends Activity {
         .setLogLevel(RestAdapter.LogLevel.FULL)
         .build();
 
-    connManager = new ConnManager(MyActivity.this);
+    connManager = new ConnManager(HomeActivity.this);
 
     mQuoteText.show();
 
@@ -70,7 +70,7 @@ public class MyActivity extends Activity {
         R.color.green);
     mSwipeRefreshLayout.setEnabled(true);
 
-    sharePrefUtils = SharePrefUtils.getInstance(MyActivity.this);
+    sharePrefUtils = SharePrefUtils.getInstance(HomeActivity.this);
 
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
     String randomQuote = randomQuotes[new Random().nextInt(randomQuotes.length)];
@@ -97,7 +97,7 @@ public class MyActivity extends Activity {
           BusProvider.getInstance().post(new OnSwipeDownEvent());
         } else {
           mSwipeRefreshLayout.setRefreshing(false);
-          Toast.makeText(MyActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+          Toast.makeText(HomeActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
       }
     });

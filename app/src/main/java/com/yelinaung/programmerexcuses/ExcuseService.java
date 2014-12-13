@@ -8,5 +8,6 @@ import retrofit.http.GET;
  * Created by Ye Lin Aung on 14/09/14.
  */
 public interface ExcuseService {
-  @GET("/") void getExcuse(Callback<Excuse> excuseCallback);
+  @GET("/")
+  void getExcuse(Callback<Excuse> excuseCallback);
 }
