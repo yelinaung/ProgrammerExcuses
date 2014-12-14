@@ -28,6 +28,8 @@
 
     <item name="android:textColor">#fff</item>
     <item name="android:textSize">28sp</item>
+    <item name="android:fontFamily">sans-serif-condensed</item>
+
     <item name="android:clickable">true</item>
     <item name="android:focusable">true</item>
 
