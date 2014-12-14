@@ -14,40 +14,34 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout
+<android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <android.support.v4.widget.SwipeRefreshLayout
-      android:id="@+id/swipe_refresh_layout"
+    android:layout_height="match_parent"
+    tools:context=".MyActivity">
+
+  <RelativeLayout
+      android:id="@+id/quote_background"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      tools:context=".MyActivity">
+      android:layout_height="match_parent">
+    <com.yelinaung.programmerexcuses.widget.SecretTextView
+        android:id="@+id/quote_text"
+        style="@style/mQuoteTextStyle"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/quote_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-      <com.yelinaung.programmerexcuses.widget.SecretTextView
-          android:id="@+id/quote_text"
-          android:fontFamily="sans-serif-condensed"
-          style="@style/mQuoteTextStyle"
-          android:gravity="center"
-          android:layout_centerVertical="true"
-          android:layout_centerHorizontal="true"/>
-
-    </RelativeLayout>
-  </android.support.v4.widget.SwipeRefreshLayout>
-  <ImageButton
-      android:id="@+id/share_btn"
-      style="@style/pe_btn_style"
-      android:src="@drawable/ic_action_share"
-      android:paddingRight="@dimen/medium_padding"
-      android:contentDescription="@string/info"
-      android:layout_alignParentBottom="true"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentEnd="true"/>
-</RelativeLayout>
+    <ImageButton
+        android:id="@+id/share_btn"
+        style="@style/pe_btn_style"
+        android:src="@drawable/ic_action_share"
+        android:padding="@dimen/medium_padding"
+        android:contentDescription="@string/info"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+  </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

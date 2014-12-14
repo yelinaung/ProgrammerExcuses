@@ -24,16 +24,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.TypedValue;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.squareup.otto.Subscribe;
-import com.yelinaung.programmerexcuses.event.BusProvider;
-import com.yelinaung.programmerexcuses.event.OnSwipeDownEvent;
-import com.yelinaung.programmerexcuses.event.QuoteDownloadFailEvent;
-import com.yelinaung.programmerexcuses.event.QuoteDownloadedEvent;
 import com.yelinaung.programmerexcuses.model.Excuse;
 import com.yelinaung.programmerexcuses.widget.SecretTextView;
 import java.util.Random;
@@ -51,7 +47,6 @@ public class HomeActivity extends ActionBarActivity {
 
   private int[] myColors;
   private SharePrefUtils sharePrefUtils;
-  private ConnManager connManager;
   private RestAdapter restAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +54,13 @@ public class HomeActivity extends ActionBarActivity {
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
 
-    restAdapter = new RestAdapter.Builder()
-        .setEndpoint(getString(R.string.api))
-        .build();
-
-    connManager = new ConnManager(HomeActivity.this);
 
     mQuoteText.show();
 
     mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.red, R.color.yellow,
         R.color.green);
-    mSwipeRefreshLayout.setEnabled(true);
 
+    mSwipeRefreshLayout.setEnabled(true);
     sharePrefUtils = SharePrefUtils.getInstance(HomeActivity.this);
 
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
@@ -100,8 +90,38 @@ public class HomeActivity extends ActionBarActivity {
 
     mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override public void onRefresh() {
-        if (connManager.isConnected()) {
-          BusProvider.getInstance().post(new OnSwipeDownEvent());
+        if (isOnline(HomeActivity.this)) {
+
+          mSwipeRefreshLayout.setProgressViewOffset(false, 0,
+              (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24,
+                  getResources().getDisplayMetrics()));
+          mSwipeRefreshLayout.setRefreshing(true);
+
+          restAdapter = new RestAdapter.Builder()
+              .setEndpoint(getString(R.string.api))
+              .setLogLevel(RestAdapter.LogLevel.BASIC)
+              .build();
+
+
+          ExcuseService service = restAdapter.create(ExcuseService.class);
+          service.getExcuse(new Callback<Excuse>() {
+            @Override public void success(Excuse excuse, Response response) {
+              mQuoteText.show();
+              sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
+              mQuoteText.setText(excuse.getMessage());
+              int color = myColors[new Random().nextInt(myColors.length)];
+              mQuoteBackground.setBackgroundColor(color);
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(color);
+              }
+
+              mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override public void failure(RetrofitError error) {
+              // TODO Handle it properly
+            }
+          });
         } else {
           mSwipeRefreshLayout.setRefreshing(false);
           Toast.makeText(HomeActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
@@ -110,75 +130,8 @@ public class HomeActivity extends ActionBarActivity {
     });
   }
 
-  @Subscribe public void setQuoteToUiEvent(QuoteDownloadedEvent event) {
-    if (mQuoteText != null) {
-      mQuoteText.setText(event.message);
-    }
-  }
-
-  @Subscribe public void QuoteDownloadFail(QuoteDownloadFailEvent event) {
-    Toast.makeText(this, event.failMsg, Toast.LENGTH_SHORT).show();
-    mSwipeRefreshLayout.setRefreshing(false);
-    mQuoteText.setText(mQuoteText.getText());
-  }
-
-  @Subscribe public void onDownloadQuote(OnSwipeDownEvent event) {
-    getQuoteFromApi();
-  }
-
-  // Doing http stuff here
-  private void getQuoteFromApi() {
-    mSwipeRefreshLayout.setRefreshing(true);
-
-    ExcuseService service = restAdapter.create(ExcuseService.class);
-    service.getExcuse(new Callback<Excuse>() {
-      @Override public void success(Excuse excuse, Response response) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mQuoteText.show();
-        BusProvider.getInstance().post(new QuoteDownloadedEvent(excuse.getMessage()));
-        sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
-        mQuoteText.setText(excuse.getMessage());
-        int color = myColors[new Random().nextInt(myColors.length)];
-        mQuoteBackground.setBackgroundColor(color);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          getWindow().setStatusBarColor(color);
-        }
-      }
-
-      @Override public void failure(RetrofitError error) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        // TODO proper error handling
-        //BusProvider.getInstance().post(new QuoteDownloadFailEvent(getString(R.string.timeout)));
-      }
-    });
-  }
-
-  public class ConnManager {
-    private final Context mContext;
-
-    public ConnManager(Context context) {
-      this.mContext = context;
-    }
-
-    public boolean isConnected() {
-      ConnectivityManager connectivity =
-          (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-      if (connectivity != null) {
-        NetworkInfo[] info = connectivity.getAllNetworkInfo();
-        if (info != null) {
-          for (NetworkInfo anInfo : info) {
-            if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    }
-  }
-
-  @SuppressWarnings("UnusedDeclaration") @OnClick(R.id.share_btn)
+  @SuppressWarnings("UnusedDeclaration")
+  @OnClick(R.id.share_btn)
   public void share() {
     Intent sendIntent = new Intent();
     sendIntent.setAction(Intent.ACTION_SEND);
@@ -188,13 +141,15 @@ public class HomeActivity extends ActionBarActivity {
     startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    BusProvider.getInstance().register(this);
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-    BusProvider.getInstance().unregister(this);
+  public static boolean isOnline(Context c) {
+    NetworkInfo netInfo = null;
+    try {
+      ConnectivityManager cm =
+          (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+      netInfo = cm.getActiveNetworkInfo();
+    } catch (SecurityException e) {
+      e.printStackTrace();
+    }
+    return netInfo != null && netInfo.isConnectedOrConnecting();
   }
 }
