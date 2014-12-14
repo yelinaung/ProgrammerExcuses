@@ -60,6 +60,7 @@ public class HomeActivity extends ActionBarActivity
         R.color.green);
 
     mSwipeRefreshLayout.setEnabled(true);
+
     sharePrefUtils = SharePrefUtils.getInstance(HomeActivity.this);
 
     String[] randomQuotes = getResources().getStringArray(R.array.excuses);
