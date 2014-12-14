@@ -24,8 +24,10 @@
 
   <RelativeLayout
       android:id="@+id/quote_background"
+      android:fitsSystemWindows="true"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
+    
     <com.yelinaung.programmerexcuses.widget.SecretTextView
         android:id="@+id/quote_text"
         style="@style/mQuoteTextStyle"
