@@ -24,8 +24,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -114,12 +114,15 @@ public class HomeActivity extends ActionBarActivity
 
   @Override public void onRefresh() {
     mSwipeRefreshLayout.setRefreshing(true);
-    Log.i("status", "status : " + mSwipeRefreshLayout.isRefreshing());
-
-    doFakeWork();
+    if (isOnline(this)) {
+      downloadQuote();
+    } else {
+      mSwipeRefreshLayout.setRefreshing(false);
+      Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+    }
   }
 
-  private void doFakeWork() {
+  private void downloadQuote() {
     restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
         .setLogLevel(RestAdapter.LogLevel.BASIC)
         .build();
@@ -137,13 +140,11 @@ public class HomeActivity extends ActionBarActivity
         }
 
         mSwipeRefreshLayout.setRefreshing(false);
-        Log.i("status", "status : " + mSwipeRefreshLayout.isRefreshing());
       }
 
       @Override public void failure(RetrofitError error) {
         // TODO Handle it properly
       }
     });
-
   }
 }
