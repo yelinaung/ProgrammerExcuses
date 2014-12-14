@@ -24,9 +24,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.TypedValue;
+import android.util.Log;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -38,7 +37,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeActivity extends ActionBarActivity {
+public class HomeActivity extends ActionBarActivity
+    implements SwipeRefreshLayout.OnRefreshListener {
 
   // View Injections
   @InjectView(R.id.quote_text) SecretTextView mQuoteText;
@@ -53,7 +53,6 @@ public class HomeActivity extends ActionBarActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_my);
     ButterKnife.inject(this);
-
 
     mQuoteText.show();
 
@@ -88,50 +87,10 @@ public class HomeActivity extends ActionBarActivity {
       getWindow().setStatusBarColor(color);
     }
 
-    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh() {
-        if (isOnline(HomeActivity.this)) {
-
-          mSwipeRefreshLayout.setProgressViewOffset(false, 0,
-              (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24,
-                  getResources().getDisplayMetrics()));
-          mSwipeRefreshLayout.setRefreshing(true);
-
-          restAdapter = new RestAdapter.Builder()
-              .setEndpoint(getString(R.string.api))
-              .setLogLevel(RestAdapter.LogLevel.BASIC)
-              .build();
-
-
-          ExcuseService service = restAdapter.create(ExcuseService.class);
-          service.getExcuse(new Callback<Excuse>() {
-            @Override public void success(Excuse excuse, Response response) {
-              mQuoteText.show();
-              sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
-              mQuoteText.setText(excuse.getMessage());
-              int color = myColors[new Random().nextInt(myColors.length)];
-              mQuoteBackground.setBackgroundColor(color);
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(color);
-              }
-
-              mSwipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override public void failure(RetrofitError error) {
-              // TODO Handle it properly
-            }
-          });
-        } else {
-          mSwipeRefreshLayout.setRefreshing(false);
-          Toast.makeText(HomeActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
-        }
-      }
-    });
+    mSwipeRefreshLayout.setOnRefreshListener(this);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  @OnClick(R.id.share_btn)
+  @SuppressWarnings("UnusedDeclaration") @OnClick(R.id.share_btn)
   public void share() {
     Intent sendIntent = new Intent();
     sendIntent.setAction(Intent.ACTION_SEND);
@@ -151,5 +110,40 @@ public class HomeActivity extends ActionBarActivity {
       e.printStackTrace();
     }
     return netInfo != null && netInfo.isConnectedOrConnecting();
+  }
+
+  @Override public void onRefresh() {
+    mSwipeRefreshLayout.setRefreshing(true);
+    Log.i("status", "status : " + mSwipeRefreshLayout.isRefreshing());
+
+    doFakeWork();
+  }
+
+  private void doFakeWork() {
+    restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
+        .setLogLevel(RestAdapter.LogLevel.BASIC)
+        .build();
+
+    ExcuseService service = restAdapter.create(ExcuseService.class);
+    service.getExcuse(new Callback<Excuse>() {
+      @Override public void success(Excuse excuse, Response response) {
+        mQuoteText.show();
+        sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
+        mQuoteText.setText(excuse.getMessage());
+        int color = myColors[new Random().nextInt(myColors.length)];
+        mQuoteBackground.setBackgroundColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          getWindow().setStatusBarColor(color);
+        }
+
+        mSwipeRefreshLayout.setRefreshing(false);
+        Log.i("status", "status : " + mSwipeRefreshLayout.isRefreshing());
+      }
+
+      @Override public void failure(RetrofitError error) {
+        // TODO Handle it properly
+      }
+    });
+
   }
 }
