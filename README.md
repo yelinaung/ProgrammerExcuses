@@ -15,7 +15,7 @@ It's now available on Play Store
 It's using 
 - [SwipeRefreshLayout](https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html) for swipe-down-to-refresh layout.
 - [ButterKinife](https://jakewharton.github.io/butterknife) for view injections.
-- [android-async-http](http://loopj.com/android-async-http) for http client.
+- [Retrofit](https://github.com/square/retrofit) for REST client.
 
 TODO
 ----
