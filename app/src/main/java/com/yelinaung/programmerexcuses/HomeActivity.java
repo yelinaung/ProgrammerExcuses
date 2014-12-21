@@ -47,7 +47,6 @@ public class HomeActivity extends ActionBarActivity
 
   private String[] myColors;
   private SharePrefUtils sharePrefUtils;
-  private RestAdapter restAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,13 +82,6 @@ public class HomeActivity extends ActionBarActivity
 
     String color = "#" + myColors[new Random().nextInt(myColors.length)];
     mQuoteBackground.setBackgroundColor(Color.parseColor(color));
-
-    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-    //  float[] hsv = new float[3];
-    //  Color.colorToHSV(Color.parseColor(color), hsv);
-    //  hsv[2] *= 0.9f;
-    //  getWindow().setStatusBarColor(Color.HSVToColor(hsv));
-    //}
 
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
@@ -127,7 +119,7 @@ public class HomeActivity extends ActionBarActivity
   }
 
   private void downloadQuote() {
-    restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
+    RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(getString(R.string.api))
         .setLogLevel(RestAdapter.LogLevel.BASIC)
         .build();
 
@@ -139,18 +131,13 @@ public class HomeActivity extends ActionBarActivity
         mQuoteText.setText(excuse.getMessage());
         String color = "#" + myColors[new Random().nextInt(myColors.length)];
         mQuoteBackground.setBackgroundColor(Color.parseColor(color));
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //  float[] hsv = new float[3];
-        //  Color.colorToHSV(Color.parseColor(color), hsv);
-        //  hsv[2] = 0.2f + 0.8f * hsv[2];
-        //  getWindow().setStatusBarColor(Color.HSVToColor(hsv));
-        //}
 
         mSwipeRefreshLayout.setRefreshing(false);
       }
 
       @Override public void failure(RetrofitError error) {
         // TODO Handle it properly
+        mSwipeRefreshLayout.setRefreshing(false);
       }
     });
   }
