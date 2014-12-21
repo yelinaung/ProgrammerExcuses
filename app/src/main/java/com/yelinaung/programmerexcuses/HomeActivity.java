@@ -18,9 +18,9 @@ package com.yelinaung.programmerexcuses;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -45,7 +45,7 @@ public class HomeActivity extends ActionBarActivity
   @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
 
-  private int[] myColors;
+  private String[] myColors;
   private SharePrefUtils sharePrefUtils;
   private RestAdapter restAdapter;
 
@@ -79,14 +79,17 @@ public class HomeActivity extends ActionBarActivity
       mQuoteText.setText(randomQuote);
     }
 
-    myColors = getResources().getIntArray(R.array.my_colors);
+    myColors = getResources().getStringArray(R.array.my_colors);
 
-    int color = myColors[new Random().nextInt(myColors.length)];
-    mQuoteBackground.setBackgroundColor(color);
+    String color = "#" + myColors[new Random().nextInt(myColors.length)];
+    mQuoteBackground.setBackgroundColor(Color.parseColor(color));
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setStatusBarColor(color);
-    }
+    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //  float[] hsv = new float[3];
+    //  Color.colorToHSV(Color.parseColor(color), hsv);
+    //  hsv[2] *= 0.9f;
+    //  getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+    //}
 
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
@@ -134,11 +137,14 @@ public class HomeActivity extends ActionBarActivity
         mQuoteText.show();
         sharePrefUtils.saveQuote(excuse.getMessage()); // save to pref
         mQuoteText.setText(excuse.getMessage());
-        int color = myColors[new Random().nextInt(myColors.length)];
-        mQuoteBackground.setBackgroundColor(color);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          getWindow().setStatusBarColor(color);
-        }
+        String color = "#" + myColors[new Random().nextInt(myColors.length)];
+        mQuoteBackground.setBackgroundColor(Color.parseColor(color));
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //  float[] hsv = new float[3];
+        //  Color.colorToHSV(Color.parseColor(color), hsv);
+        //  hsv[2] = 0.2f + 0.8f * hsv[2];
+        //  getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+        //}
 
         mSwipeRefreshLayout.setRefreshing(false);
       }
