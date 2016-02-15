@@ -23,7 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -37,7 +37,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeActivity extends ActionBarActivity
+public class HomeActivity extends AppCompatActivity
     implements SwipeRefreshLayout.OnRefreshListener {
 
   // View Injections
@@ -86,8 +86,7 @@ public class HomeActivity extends ActionBarActivity
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
 
-  @SuppressWarnings("UnusedDeclaration") @OnClick(R.id.share_btn)
-  public void share() {
+  @SuppressWarnings("UnusedDeclaration") @OnClick(R.id.share_btn) public void share() {
     Intent sendIntent = new Intent();
     sendIntent.setAction(Intent.ACTION_SEND);
     sendIntent.putExtra(Intent.EXTRA_TEXT,
