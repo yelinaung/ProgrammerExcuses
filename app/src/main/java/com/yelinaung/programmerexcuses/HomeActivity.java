@@ -58,6 +58,8 @@ public class HomeActivity extends AppCompatActivity
     mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.red, R.color.yellow,
         R.color.green);
 
+    mSwipeRefreshLayout.setProgressViewOffset(true, 50, 120);
+
     mSwipeRefreshLayout.setEnabled(true);
 
     sharePrefUtils = SharePrefUtils.getInstance(HomeActivity.this);
