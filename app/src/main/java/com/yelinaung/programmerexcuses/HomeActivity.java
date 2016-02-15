@@ -26,8 +26,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import com.yelinaung.programmerexcuses.model.Excuse;
 import com.yelinaung.programmerexcuses.widget.SecretTextView;
@@ -41,9 +41,9 @@ public class HomeActivity extends ActionBarActivity
     implements SwipeRefreshLayout.OnRefreshListener {
 
   // View Injections
-  @InjectView(R.id.quote_text) SecretTextView mQuoteText;
-  @InjectView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-  @InjectView(R.id.quote_background) RelativeLayout mQuoteBackground;
+  @Bind(R.id.quote_text) SecretTextView mQuoteText;
+  @Bind(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+  @Bind(R.id.quote_background) RelativeLayout mQuoteBackground;
 
   private String[] myColors;
   private SharePrefUtils sharePrefUtils;
@@ -51,7 +51,7 @@ public class HomeActivity extends ActionBarActivity
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_my);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
 
     mQuoteText.show();
 
